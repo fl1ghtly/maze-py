@@ -19,4 +19,4 @@ class Cell:
             direction = 'E'
             
         self.walls[direction] = False
-        other_cell.walls[Cell.pairings[direction]] = False
+        other.walls[Cell.pairings[direction]] = False
