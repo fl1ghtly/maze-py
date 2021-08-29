@@ -1,13 +1,9 @@
 from collections import deque
+from cell import Cell
+import random
 
 def make_empty_maze(size):
-    '''
-    Each cell consists of
-        Position
-        Occupation Type
-        Visit Status
-    '''
-    return [[[(x, y), 1, False] for x in range(size[0])] for y in range(size[1])]
+    return [[Cell(x, y) for x in range(size[0])] for y in range(size[1])]
 
 # Prints out the maze based upon its cells
 def render_maze(maze, character):
@@ -27,44 +23,24 @@ def render_maze(maze, character):
         # Print new line for next row
         print()
 
-# Returns a list of cell positions that have not been visited by the current cell
-def check_neighbor_cells(current_cell, maze):
-    unvisited_cells = []
-    cell_position = current_cell[0]
-    to_check = [(cell_position[0], cell_position[1] - 2), # North
-                (cell_position[0], cell_position[1] + 2), # South
-                (cell_position[0] + 2, cell_position[1]), # East
-                (cell_position[0] - 2, cell_position[1])] # West
+# Returns a list of valid neighboring cells
+def get_neighbor(cell, x_length, y_length):
+    neighbor_cells = [(cell.x, cell.y - 1), # North
+                        (cell.x, cell.y + 1), # South
+                        (cell.x + 1, cell.y), # East
+                        (cell.x - 1, cell.y)] # West
 
-    for new_pos in to_check:
-        # Negative values make the index wrap around
-        if new_pos[0] >= 0 and new_pos[1] >= 0:
-            try:
-                new_cell = maze[new_pos[0]][new_pos[1]]
-                if new_cell[2] == False:
-                    unvisited_cells.append(new_cell[0])
-            except IndexError:
-                continue
-    
-    return unvisited_cells
+    for position in neighbor_cells:
+        # Remove cell positions that are out of bounds
+        if not (0 < position[0] < x_length or 0 < position[1] < y_length):
+            neighbor_cells.remove(position)
+            
+    return neighbor_cells
 
 def create_maze_wall(maze):
-    stack = deque()
-    start_cell = maze[0][0]
-    stack.append(start_cell)
-    visited = [start_cell]
-
-    while stack:
-        cell = stack.pop()
-        if cell not in visited:
-            pass
+    pass
 
 '''
-Cell Values:
-    0 = Walkable Space
-    1 = Barrier
-    2 = Player
-
 Player Sprites:
     ˂ ˃˄ ˅
 '''
@@ -74,6 +50,7 @@ def main():
     maze = make_empty_maze((x_length, y_length))
     # TODO replace hardcoded character with one that changes
     # based on player's next position
+    create_maze_wall(maze)
     render_maze(maze, '˄')
 
 if __name__ == "__main__":
