@@ -6,22 +6,31 @@ def make_empty_maze(size):
     return [[Cell(x, y) for x in range(size[0])] for y in range(size[1])]
 
 # Prints out the maze based upon its cells
-def render_maze(maze, character):
+def render_maze(maze):
     for row in maze:
-        for cell in row:
-            cell_value = cell[1]
-            # If cell can be entered print empty character
-            if cell_value == 0:
-                # TODO replace with better empty space character
-                print(".", end='')
-            # Prints wall if cell can not be entered
-            elif cell_value == 1:
-                print("■", end='')
-            # Prints the player character
+        for c in row:
+            if c == 'W':
+                print('■', end='')
             else:
-                print(character, end='')
+                print('.', end='')
         # Print new line for next row
         print()
+
+def convert_maze_for_render(maze, x_length, y_length):
+    render = [['W' for x in range(x_length * 2 + 1)] for y in range(y_length * 2 + 1)]
+    for i, row in enumerate(maze):
+        for c in row:
+            render[2 * c.x + 1][2 * c.y + 1] = 'O'
+            if c.walls['E'] == True:
+                render[2 * (c.x + 1)][2 * c.y + 1] = 'W'
+            else:
+                render[2 * (c.x + 1)][2 * c.y + 1] = 'O'
+            
+            if c.walls['S'] == True:
+                render[2 * c.x + 1][2 * (c.y + 1)] = 'W'
+            else:
+                render[2 * c.x + 1][2 * (c.y + 1)] = 'O'
+    return render
 
 # Returns a list of valid neighboring cells
 def get_neighbor(cell, x_length, y_length):
@@ -37,6 +46,7 @@ def get_neighbor(cell, x_length, y_length):
             
     return neighbor_cells
 
+
 def create_maze_wall(maze):
     pass
 
@@ -48,10 +58,9 @@ def main():
     x_length = int(input("How wide should the maze be: "))
     y_length = int(input("How tall should the maze be: "))
     maze = make_empty_maze((x_length, y_length))
-    # TODO replace hardcoded character with one that changes
-    # based on player's next position
     create_maze_wall(maze)
-    render_maze(maze, '˄')
+    render = convert_maze_for_render(maze, x_length, y_length)
+    render_maze(render)
 
 if __name__ == "__main__":
     main()
