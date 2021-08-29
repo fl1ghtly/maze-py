@@ -5,7 +5,18 @@ class Cell:
         self.y = y
         self.visited = False
         self.walls = {'N': True, 'S': True, 'W': True, 'E': True}
-
-    def remove_wall(self, direction, other_cell):
+        
+    # Removes the wall between two cells
+    def remove_wall(self, other):
+        delta = (other.x - self.x, other.y - self.y)
+        if delta == (0, -1):
+            direction = 'N'
+        elif delta == (0, 1):
+            direction = 'S'
+        elif delta == (-1, 0):
+            direction = 'W'
+        else:
+            direction = 'E'
+            
         self.walls[direction] = False
         other_cell.walls[Cell.pairings[direction]] = False
