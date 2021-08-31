@@ -1,5 +1,6 @@
 from collections import deque
 from cell import Cell
+from player import Player
 import random
 
 def make_empty_maze(size):
@@ -32,13 +33,15 @@ def render_svg(maze):
         print('</svg>', file=f)
 
 # Prints out the maze based upon its cells
-def render_text(maze):
+def render_text(maze, player):
     for row in maze:
         for c in row:
             if c == 'W':
                 print('■', end='')
             elif c == 'O':
                 print('.', end='')
+            elif c == 'P':
+                print(player.character, end='')
             else:
                 print('#', end='')
 
@@ -49,7 +52,9 @@ def convert_maze_for_render(maze, x_length, y_length):
     render = [['W' for x in range(x_length * 2 + 1)] for y in range(y_length * 2 + 1)]
     for i, row in enumerate(maze):
         for c in row:
-            if c.start == True or c.finish == True:
+            if c.player_occupied == True:
+                render[2 * c.x + 1][2 * c.y + 1] = 'P'
+            elif c.start == True or c.finish == True:
                 render[2 * c.x + 1][2 * c.y + 1] = 'F'
             else:
                 render[2 * c.x + 1][2 * c.y + 1] = 'O'
@@ -97,6 +102,21 @@ def create_maze_wall(maze, x, y):
             chosen.visited = True
             stack.append(chosen)
 
+# Assumes the move is possible
+def update_player_position(player, maze, command):
+    maze[player.x][player.y].player_occupied = False
+    if command == 'N':
+        player.y -= 1
+    elif command == 'S':
+        player.y += 1
+    elif command == 'W':
+        player.x -= 1
+    else:
+        player.x += 1
+    player.change_character(command)
+    maze[player.x][player.y].player_occupied = True
+
+# TODO make function that gets player input and outputs direction
 '''
 Player Sprites:
     ˂ ˃˄ ˅
@@ -106,10 +126,12 @@ def main():
     y_length = int(input("How tall should the maze be: "))
     maze = make_empty_maze((x_length, y_length))
     maze[0][0].start = True
+    maze[0][0].player_occupied = True
     maze[y_length - 1][x_length - 1].finish = True
+    player = Player(0, 0)
     create_maze_wall(maze, x_length, y_length)
     render = convert_maze_for_render(maze, x_length, y_length)
-    render_svg(render)
+    render_text(render, player)
 
 if __name__ == "__main__":
     main()

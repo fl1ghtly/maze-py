@@ -6,6 +6,7 @@ class Cell:
         self.visited = False
         self.start = False
         self.finish = False
+        self.player_occupied = False
         self.walls = {'N': True, 'S': True, 'W': True, 'E': True}
         
     # Removes the wall between two cells
