@@ -18,12 +18,16 @@ def render_svg(maze):
         for i, row in enumerate(maze):
             for j, c in enumerate(row):
                 x, y = i * scale, j * scale
+                stroke = "black"
                 if c == 'W':
-                    print(f'<rect x="{x}" y="{y}" width="{scale}" height="{scale}" \
-                            fill="black" />', file=f)
+                    fill = "black"
+                elif c == 'O':
+                    fill = "white"
                 else:
-                    print(f'<rect x="{x}" y="{y}" width="{scale}" height="{scale}" \
-                            fill="white" stroke="black" />', file=f)
+                    fill = "red"
+                    
+                print(f'<rect x="{x}" y="{y}" width="{scale}" height="{scale}" \
+                        fill="{fill}" stroke="{stroke}" />', file=f)
 
         print('</svg>', file=f)
 
@@ -33,8 +37,11 @@ def render_text(maze):
         for c in row:
             if c == 'W':
                 print('■', end='')
-            else:
+            elif c == 'O':
                 print('.', end='')
+            else:
+                print('#', end='')
+
         # Print new line for next row
         print()
 
@@ -42,7 +49,11 @@ def convert_maze_for_render(maze, x_length, y_length):
     render = [['W' for x in range(x_length * 2 + 1)] for y in range(y_length * 2 + 1)]
     for i, row in enumerate(maze):
         for c in row:
-            render[2 * c.x + 1][2 * c.y + 1] = 'O'
+            if c.start == True or c.finish == True:
+                render[2 * c.x + 1][2 * c.y + 1] = 'F'
+            else:
+                render[2 * c.x + 1][2 * c.y + 1] = 'O'
+
             if c.walls['E'] == True:
                 render[2 * (c.x + 1)][2 * c.y + 1] = 'W'
             else:
@@ -85,6 +96,7 @@ def create_maze_wall(maze, x, y):
             cell.remove_wall(chosen)
             chosen.visited = True
             stack.append(chosen)
+
 '''
 Player Sprites:
     ˂ ˃˄ ˅
@@ -93,6 +105,8 @@ def main():
     x_length = int(input("How wide should the maze be: "))
     y_length = int(input("How tall should the maze be: "))
     maze = make_empty_maze((x_length, y_length))
+    maze[0][0].start = True
+    maze[y_length - 1][x_length - 1].finish = True
     create_maze_wall(maze, x_length, y_length)
     render = convert_maze_for_render(maze, x_length, y_length)
     render_svg(render)
