@@ -54,46 +54,37 @@ def convert_maze_for_render(maze, x_length, y_length):
                 render[2 * c.x + 1][2 * (c.y + 1)] = 'O'
     return render
 
-# Returns a list of valid neighboring cell positions
-def get_neighbor(cell, x_length, y_length):
+# Returns a list of uunvisited neighboring cells
+def get_neighbor(cell, maze, x_length, y_length):
     neighbor_cells = [(cell.x, cell.y - 1), # North
                         (cell.x, cell.y + 1), # South
                         (cell.x + 1, cell.y), # East
                         (cell.x - 1, cell.y)] # West
 
-    cells = []
+    unvisited = []
     for position in neighbor_cells:
         # Remove cell positions that are out of bounds
         if 0 <= position[0] < x_length and 0 <= position[1] < y_length:
-            cells.append(position)
-            
-    return cells
-
-def get_unvisited_cells(maze, cells):
-    unvisited = []
-    for pos in cells:
-        c =  maze[pos[0]][pos[1]]
-        if c.visited == False:
-            unvisited.append(c)
-    return unvisited            
+            c =  maze[position[1]][position[0]]
+            # Only accept cells that are not visited
+            if c.visited == False:
+                unvisited.append(c)
+    return unvisited         
 
 def create_maze_wall(maze, x, y):
     stack = deque()
     start = maze[0][0]
     start.visited = True
     stack.append(start)
-
     while stack:
         cell = stack.pop()
-        cell_neighbors = get_unvisited_cells(maze, get_neighbor(cell, x, y))
+        cell_neighbors = get_neighbor(cell, maze, x, y)
         if len(cell_neighbors) > 0:
             stack.append(cell)
             chosen = random.choice(cell_neighbors)
             cell.remove_wall(chosen)
             chosen.visited = True
             stack.append(chosen)
-        
-
 '''
 Player Sprites:
     ˂ ˃˄ ˅
