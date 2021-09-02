@@ -4,6 +4,8 @@ class Cell:
         self.x = x
         self.y = y
         self.visited = False
+        self.start = False
+        self.finish = False
         self.walls = {'N': True, 'S': True, 'W': True, 'E': True}
         
     # Removes the wall between two cells

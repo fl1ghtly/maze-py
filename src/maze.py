@@ -7,25 +7,25 @@ def make_empty_maze(size):
     return [[Cell(x, y) for x in range(size[0])] for y in range(size[1])]
 
 # Uses a converted maze render to generate an svg
-def render_svg(maze):
+def render_svg(maze, map):
     scale = 10
     width = len(maze[0]) * scale
     height = len(maze) * scale
-    with open("maze.svg", 'w') as f:
+    
+    filename = 'maze.svg'
+    with open(filename, 'w') as f:
         print('<?xml version="1.0" encoding="utf-8"?>', file=f)
         print(f'<svg width="{width}" height="{height}"', file=f)
         print(' xmlns="http://www.w3.org/2000/svg"', file=f)
         print(' xmlns:xlink="http://www.w3.org/1999/xlink">', file=f)
         
+        stroke = "black"
         for i, row in enumerate(maze):
             for j, c in enumerate(row):
                 x, y = i * scale, j * scale
-                if c == 'W':
-                    print(f'<rect x="{x}" y="{y}" width="{scale}" height="{scale}" \
-                            fill="black" />', file=f)
-                else:
-                    print(f'<rect x="{x}" y="{y}" width="{scale}" height="{scale}" \
-                            fill="white" stroke="black" />', file=f)
+                fill = map[c]
+                print(f'<rect x="{x}" y="{y}" width="{scale}" height="{scale}" \
+                        fill="{fill}" stroke="{stroke}" />', file=f)
 
         print('</svg>', file=f)
 
@@ -35,8 +35,11 @@ def render_text(maze):
         for c in row:
             if c == 'W':
                 print('■', end='')
-            else:
+            elif c == 'O':
                 print('.', end='')
+            else:
+                print('#', end='')
+
         # Print new line for next row
         print()
 
@@ -46,7 +49,11 @@ def convert_maze_for_render(maze, x_length, y_length):
     render = [['W' for x in range(x_length * 2 + 1)] for y in range(y_length * 2 + 1)]
     for i, row in enumerate(maze):
         for c in row:
-            render[2 * c.x + 1][2 * c.y + 1] = 'O'
+            if c.start == True or c.finish == True:
+                render[2 * c.x + 1][2 * c.y + 1] = 'F'
+            else:
+                render[2 * c.x + 1][2 * c.y + 1] = 'O'
+
             if c.walls['E'] == True:
                 render[2 * (c.x + 1)][2 * c.y + 1] = 'W'
             else:
@@ -94,10 +101,19 @@ def create_maze_wall(maze, x, y):
 def main():
     x_length = int(input("How wide should the maze be: "))
     y_length = int(input("How tall should the maze be: "))
+
+    # Create a maze
     maze = make_empty_maze((x_length, y_length))
     create_maze_wall(maze, x_length, y_length)
+
+    # Set Starting and ending points
+    maze[0][0].start = True
+    maze[y_length - 1][x_length - 1].finish = True
+
+    # Renders the final maze
     render = convert_maze_for_render(maze, x_length, y_length)
-    render_svg(render)
+    svg_map = {'W': 'black', 'O': 'white', 'F': 'red'}
+    render_svg(render, svg_map)
 
 if __name__ == "__main__":
     main()
