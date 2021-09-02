@@ -1,16 +1,25 @@
 from collections import deque
-from cell import Cell
+from svglib.svglib import svg2rlg
 from player import Player
+from cell import Cell
 import random
+import pygame
+import io
 
 def make_empty_maze(size):
     return [[Cell(x, y) for x in range(size[0])] for y in range(size[1])]
+
+def load_svg(svg):
+    drawing = svg2rlg(svg)
+    byte = io.BytesIO(drawing.asString('png'))
+    return pygame.image.load(byte)
 
 def render_svg(maze):
     scale = 10
     width = len(maze[0]) * scale
     height = len(maze) * scale
-    with open("maze.svg", 'w') as f:
+    filename = 'maze.svg'
+    with open(filename, 'w') as f:
         print('<?xml version="1.0" encoding="utf-8"?>', file=f)
         print(f'<svg width="{width}" height="{height}"', file=f)
         print(' xmlns="http://www.w3.org/2000/svg"', file=f)
@@ -24,6 +33,8 @@ def render_svg(maze):
                     fill = "black"
                 elif c == 'O':
                     fill = "white"
+                elif c == 'P':
+                    fill = 'yellow'
                 else:
                     fill = "red"
                     
@@ -31,6 +42,7 @@ def render_svg(maze):
                         fill="{fill}" stroke="{stroke}" />', file=f)
 
         print('</svg>', file=f)
+    return filename
 
 # Prints out the maze based upon its cells
 def render_text(maze, player):
@@ -48,6 +60,8 @@ def render_text(maze, player):
         # Print new line for next row
         print()
 
+# TODO possible optimization by only
+# changing the player pos, not generating entire maze
 def convert_maze_for_render(maze, x_length, y_length):
     render = [['W' for x in range(x_length * 2 + 1)] for y in range(y_length * 2 + 1)]
     for i, row in enumerate(maze):
@@ -132,25 +146,62 @@ def update_player_position(player, maze, command):
         player.x -= 1
     elif command == 'E':
         player.x += 1
+        
     player.change_character(command)
-    maze[player.x][player.y].player_occupied = True
+    maze[player.y][player.x].player_occupied = True
+
+def display_svg(screen, maze, x_length, y_length):
+    render = convert_maze_for_render(maze, x_length, y_length)
+    svg = render_svg(render)
+    im = load_svg(svg)
+    screen.blit(im, (0, 0))
+    pygame.display.update()
 
 # TODO make function that gets player input and outputs direction
-'''
-Player Sprites:
-    ˂ ˃˄ ˅
-'''
 def main():
     x_length = int(input("How wide should the maze be: "))
     y_length = int(input("How tall should the maze be: "))
+
     maze = make_empty_maze((x_length, y_length))
     maze[0][0].start = True
     maze[0][0].player_occupied = True
     maze[y_length - 1][x_length - 1].finish = True
+
     player = Player(0, 0)
     create_maze_wall(maze, x_length, y_length)
+    '''
     render = convert_maze_for_render(maze, x_length, y_length)
-    render_text(render, player)
+    render_svg(render)
+    '''
+    pygame.init()
+    screen = pygame.display.set_mode((500, 500))
+    display_svg(screen, maze, x_length, y_length)
+    running = True
+    while running:
+        for e in pygame.event.get():
+            if e.type == pygame.QUIT:
+                running = False
+            elif e.type == pygame.KEYDOWN:
+                if e.key == pygame.K_UP:
+                    dir = 'N'
+                elif e.key == pygame.K_DOWN:
+                    dir = 'S'
+                elif e.key == pygame.K_LEFT:
+                    dir = 'W'
+                elif e.key == pygame.K_RIGHT:
+                    dir = 'E'
+                else:
+                    dir = None
 
+                if check_possible_move(player, dir, maze):
+                    update_player_position(player, maze, dir)
+                    display_svg(screen, maze, x_length, y_length)
+                    '''
+                    render = convert_maze_for_render(maze, x_length, y_length)
+                    svg = render_svg(render)
+                    im = load_svg(svg)
+                    pygame.Surface.blit(im)
+                    '''
+                
 if __name__ == "__main__":
     main()
