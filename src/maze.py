@@ -29,20 +29,6 @@ def render_svg(maze, map):
 
         print('</svg>', file=f)
 
-# Prints out the maze based upon its cells
-def render_text(maze):
-    for row in maze:
-        for c in row:
-            if c == 'W':
-                print('■', end='')
-            elif c == 'O':
-                print('.', end='')
-            else:
-                print('#', end='')
-
-        # Print new line for next row
-        print()
-
 # Converts a maze to a new array that has 
 # each cell be either a wall or a path
 def convert_maze_for_render(maze, x_length, y_length):
