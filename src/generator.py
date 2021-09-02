@@ -12,7 +12,7 @@ def render_svg(maze, map):
     width = len(maze[0]) * scale
     height = len(maze) * scale
     
-    filename = 'maze.svg'
+    filename = './maze.svg'
     with open(filename, 'w') as f:
         print('<?xml version="1.0" encoding="utf-8"?>', file=f)
         print(f'<svg width="{width}" height="{height}"', file=f)
