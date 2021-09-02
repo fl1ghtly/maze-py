@@ -102,6 +102,25 @@ def create_maze_wall(maze, x, y):
             chosen.visited = True
             stack.append(chosen)
 
+def check_possible_move(player, direction, maze):
+    pos_x = player.x
+    pos_y = player.y
+    if direction == 'N':
+        pos_y = player.y - 1
+    elif direction == 'S':
+        pos_y = player.y + 1
+    elif direction == 'W':
+        pos_x = player.x - 1
+    elif direction == 'E':
+        pos_x = player.x + 1
+    else:
+        return False
+
+    if maze[pos_y][pos_x].walls[direction] == False:
+        return True
+    else:
+        return False
+
 # Assumes the move is possible
 def update_player_position(player, maze, command):
     maze[player.x][player.y].player_occupied = False
@@ -111,7 +130,7 @@ def update_player_position(player, maze, command):
         player.y += 1
     elif command == 'W':
         player.x -= 1
-    else:
+    elif command == 'E':
         player.x += 1
     player.change_character(command)
     maze[player.x][player.y].player_occupied = True
