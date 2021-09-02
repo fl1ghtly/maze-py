@@ -2,9 +2,11 @@ from collections import deque
 from cell import Cell
 import random
 
+# Returns a x by y array populated with cells
 def make_empty_maze(size):
     return [[Cell(x, y) for x in range(size[0])] for y in range(size[1])]
 
+# Uses a converted maze render to generate an svg
 def render_svg(maze):
     scale = 10
     width = len(maze[0]) * scale
@@ -38,6 +40,8 @@ def render_text(maze):
         # Print new line for next row
         print()
 
+# Converts a maze to a new array that has 
+# each cell be either a wall or a path
 def convert_maze_for_render(maze, x_length, y_length):
     render = [['W' for x in range(x_length * 2 + 1)] for y in range(y_length * 2 + 1)]
     for i, row in enumerate(maze):
@@ -71,6 +75,7 @@ def get_neighbor(cell, maze, x_length, y_length):
                 unvisited.append(c)
     return unvisited         
 
+# Recursive backtracking algorithm
 def create_maze_wall(maze, x, y):
     stack = deque()
     start = maze[0][0]
@@ -85,10 +90,7 @@ def create_maze_wall(maze, x, y):
             cell.remove_wall(chosen)
             chosen.visited = True
             stack.append(chosen)
-'''
-Player Sprites:
-    ˂ ˃˄ ˅
-'''
+
 def main():
     x_length = int(input("How wide should the maze be: "))
     y_length = int(input("How tall should the maze be: "))
