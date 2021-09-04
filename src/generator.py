@@ -12,7 +12,7 @@ def render_svg(maze, map):
     width = len(maze[0]) * scale
     height = len(maze) * scale
     
-    filename = './maze.svg'
+    filename = 'maze.svg'
     with open(filename, 'w') as f:
         print('<?xml version="1.0" encoding="utf-8"?>', file=f)
         print(f'<svg width="{width}" height="{height}"', file=f)
@@ -35,8 +35,13 @@ def convert_maze_for_render(maze, x_length, y_length):
     render = [['W' for x in range(x_length * 2 + 1)] for y in range(y_length * 2 + 1)]
     for i, row in enumerate(maze):
         for c in row:
-            if c.start == True or c.finish == True:
+            # TODO must be a better way to refactor this
+            if c.start == True:
+                render[2 * c.x + 1][2 * c.y + 1] = 'S'
+            elif c.finish == True:
                 render[2 * c.x + 1][2 * c.y + 1] = 'F'
+            elif c.path == True:
+                render[2 * c.x + 1][2 * c.y + 1] = 'P'
             else:
                 render[2 * c.x + 1][2 * c.y + 1] = 'O'
 
@@ -98,7 +103,8 @@ def main():
 
     # Renders the final maze
     render = convert_maze_for_render(maze, x_length, y_length)
-    svg_map = {'W': 'black', 'O': 'white', 'F': 'red'}
+    svg_map = {'W': 'black', 'O': 'white', 'F': 'red',
+               'S': 'green', 'P': 'orange'}
     render_svg(render, svg_map)
 
 if __name__ == "__main__":
