@@ -1,23 +1,14 @@
-from PIL import Image
-from collections import deque
+from reportlab.graphics import renderPM
+from svglib.svglib import svg2rlg
+from io import BytesIO
 
-def is_path(pixel):
-    pass
+# Converts a SVG file to a png file
+# Returns a python file object
+def convert_svg(file):
+    draw = svg2rlg(file)
+    buff = BytesIO()
+    renderPM.drawToFile(draw, buff, fmt='png')
+    return buff
 
-def is_end(pixel):
-    pass
-
-def find_start(pixels):
-    pass
-
-def breadth_first_search(start, pixels):
-    pass
-
-def main(file):
-    img = Image.open(file)
-    pixels = img.load()
-    start = find_start(pixels)
-    breadth_first_search(start, pixels)
-    
 if __name__ == '__main__':
-    main()
+    convert_svg('maze.svg')
