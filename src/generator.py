@@ -56,22 +56,27 @@ def convert_maze_for_render(maze, x_length, y_length):
                 render[2 * c.x + 1][2 * (c.y + 1)] = 'O'
     return render
 
-# Returns a list of uunvisited neighboring cells
+# Returns a list of neighboring cells
 def get_neighbor(cell, maze, x_length, y_length):
     neighbor_cells = [(cell.x, cell.y - 1), # North
                         (cell.x, cell.y + 1), # South
                         (cell.x + 1, cell.y), # East
                         (cell.x - 1, cell.y)] # West
 
+    return neighbor_cells
+
+# Returns a list of unvisited neighbors
+def get_unvisited(cell, maze, x_length, y_length):
+    neighbors = get_neighbor(cell, maze, x_length, y_length)
     unvisited = []
-    for position in neighbor_cells:
+    for position in neighbors:
         # Remove cell positions that are out of bounds
         if 0 <= position[0] < x_length and 0 <= position[1] < y_length:
             c =  maze[position[1]][position[0]]
             # Only accept cells that are not visited
             if c.visited == False:
                 unvisited.append(c)
-    return unvisited         
+    return unvisited   
 
 # Recursive backtracking algorithm
 def create_maze_wall(maze, x, y):
@@ -81,7 +86,7 @@ def create_maze_wall(maze, x, y):
     stack.append(start)
     while stack:
         cell = stack.pop()
-        cell_neighbors = get_neighbor(cell, maze, x, y)
+        cell_neighbors = get_unvisited(cell, maze, x, y)
         if len(cell_neighbors) > 0:
             stack.append(cell)
             chosen = random.choice(cell_neighbors)
