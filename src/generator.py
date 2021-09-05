@@ -57,11 +57,20 @@ def convert_maze_for_render(maze, x_length, y_length):
     return render
 
 # Returns a list of neighboring cells
-def get_neighbor(cell, maze, x_length, y_length):
+# Must be either a cell object or a tuple
+def get_neighbor(cell=None, position=None):
+    if cell:
     neighbor_cells = [(cell.x, cell.y - 1), # North
                         (cell.x, cell.y + 1), # South
                         (cell.x + 1, cell.y), # East
                         (cell.x - 1, cell.y)] # West
+    elif position:
+        neighbor_cells = [(position[0], position[1] - 1), # North
+                            (position[0], position[1] + 1), # South
+                            (position[0] + 1, position[1]), # East
+                            (position[0] - 1, position[1])] # West
+    else:
+        raise ValueError("Cell or position argument is required")
 
     return neighbor_cells
 
