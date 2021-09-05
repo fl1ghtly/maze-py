@@ -66,10 +66,10 @@ def draw_path(maze, path):
 # Must be either a cell object or a tuple
 def get_neighbor(cell=None, position=None):
     if cell:
-    neighbor_cells = [(cell.x, cell.y - 1), # North
-                        (cell.x, cell.y + 1), # South
-                        (cell.x + 1, cell.y), # East
-                        (cell.x - 1, cell.y)] # West
+        neighbor_cells = [(cell.x, cell.y - 1), # North
+                            (cell.x, cell.y + 1), # South
+                            (cell.x + 1, cell.y), # East
+                            (cell.x - 1, cell.y)] # West
     elif position:
         neighbor_cells = [(position[0], position[1] - 1), # North
                             (position[0], position[1] + 1), # South
@@ -99,10 +99,10 @@ def get_unvisited(cell, maze, x_length, y_length):
     adjacent = get_adjacent(cell, x_length, y_length)
     unvisited = []
     for position in adjacent:
-            c =  maze[position[1]][position[0]]
-            # Only accept cells that are not visited
-            if c.visited == False:
-                unvisited.append(c)
+        c =  maze[position[1]][position[0]]
+        # Only accept cells that are not visited
+        if c.visited == False:
+            unvisited.append(c)
     return unvisited   
 
 # Recursive backtracking algorithm
