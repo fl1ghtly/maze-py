@@ -1,5 +1,5 @@
 from collections import deque
-from generator import get_adjacent
+import generator
 import converter
 import numpy as np
 
@@ -8,21 +8,26 @@ def find_start(maze):
         if cell == 'S':
             return x, y
 
+# Returns a path from start to finish
 def breadth_first_search(maze, start):
     queue = deque()
     visited = [start]
-    queue.append(start)
+    queue.append([start])
 
     while queue:
-        cell = queue.pop()
+        path = queue.pop()
+        cell = path[-1]
         if maze[cell[0]][cell[1]] == 'F':
-            return cell
+            return path
 
-        neighbors = get_adjacent(cell, len(maze[0]), len(maze))
+        neighbors = generator.get_adjacent(cell, len(maze[0]), len(maze))
         for neighbor in neighbors:
+            if maze[neighbor[1]][neighbor[0]] != 'W':
             if neighbor not in visited:
                 visited.append(neighbor)
-                queue.append(neighbor)
+                    new_path = list(path)
+                    new_path.append(neighbor)
+                    queue.append(new_path)
         
 
 def main(file):
