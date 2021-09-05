@@ -45,6 +45,22 @@ def get_dimensions(file):
         width = x_count + 1
         return width, height
 
+# Converts a 1d Maze to a 2d Maze
+# Using information from the SVG
+def maze_2d_converter(maze, width, height):
+    x_counter = 0
+    y_counter = 0
+    maze_2d = [[None for x in range(width)] for y in range(height)]
+    for cell in maze:
+        maze_2d[y_counter][x_counter] = cell
+        x_counter += 1
+        
+        if x_counter >= width:
+            # TODO replace mutable
+            x_counter = 0
+            y_counter += 1
+    return maze_2d
+
 # Converts a premade Maze SVG File to 
 # an array
 def svg_to_array(file):
