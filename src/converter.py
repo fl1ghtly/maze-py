@@ -64,7 +64,7 @@ def maze_2d_converter(maze, width, height):
 # Converts a premade Maze SVG File to 
 # an array
 def svg_to_array(file):
-    maze = []
+    temp = []
     svg_map = {'black': 'W', 'white': 'O', 'red': 'F',
                'green': 'S', 'orange': 'P'}
     with open(file, 'r') as f:
@@ -72,7 +72,9 @@ def svg_to_array(file):
         for line in lines:
             color = regex.search(r'fill=\K"(.*?)"', line)
             if color:
-                maze.append(svg_map.get(color.group(1), None))
+                temp.append(svg_map.get(color.group(1), None))
+        w, h = get_dimensions(file)
+        maze = maze_2d_converter(temp, w, h)
     return maze
 
 if __name__ == '__main__':
