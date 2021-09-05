@@ -80,6 +80,7 @@ def get_neighbor(cell=None, position=None):
 
     return neighbor_cells
 
+# Returns a list of tuples defining position
 def get_adjacent(cell, x_length, y_length):
     if isinstance(cell, Cell):
         neighbors = get_neighbor(cell)
@@ -136,7 +137,7 @@ def main():
     render = convert_maze_for_render(maze, x_length, y_length)
     svg_map = {'W': 'black', 'O': 'white', 'F': 'red',
                'S': 'green', 'P': 'orange'}
-    render_svg(render, svg_map)
+    render_svg(render, svg_map, 'maze.svg')
 
 if __name__ == "__main__":
     main()
