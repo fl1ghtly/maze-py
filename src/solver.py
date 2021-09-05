@@ -3,14 +3,16 @@ import generator
 import converter
 import numpy as np
 
-# Finds where the maze begins
+
 def find_start(maze):
+    # Finds where the maze begins
     for (x, y), cell in np.ndenumerate(maze):
         if cell == 'S':
             return x, y
 
-# Returns a path from start to finish
+
 def breadth_first_search(maze, start):
+    # Returns a path from start to finish
     queue = deque()
     visited = [start]
     queue.append([start])
@@ -29,7 +31,7 @@ def breadth_first_search(maze, start):
                     new_path = list(path)
                     new_path.append(neighbor)
                     queue.append(new_path)
-        
+
 
 def main(file):
     # Converts an SVG to a maze format
@@ -39,10 +41,11 @@ def main(file):
     start = find_start(np_maze)
     path = breadth_first_search(np_maze, start)
     maze_solution = generator.draw_path(maze_arr, path)
-    
+
     svg_map = {'W': 'black', 'O': 'white', 'F': 'red',
                'S': 'green', 'P': 'orange'}
     generator.render_svg(maze_solution, svg_map, 'solution.svg')
+
 
 if __name__ == '__main__':
     main('maze.svg')
