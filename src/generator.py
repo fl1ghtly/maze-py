@@ -74,13 +74,24 @@ def get_neighbor(cell=None, position=None):
 
     return neighbor_cells
 
-# Returns a list of unvisited neighbors
-def get_unvisited(cell, maze, x_length, y_length):
-    neighbors = get_neighbor(cell, maze, x_length, y_length)
-    unvisited = []
+def get_adjacent(cell, x_length, y_length):
+    if isinstance(cell, Cell):
+        neighbors = get_neighbor(cell)
+    else:
+        neighbors = get_neighbor(position=cell)
+        
+    adjacent = []
     for position in neighbors:
         # Remove cell positions that are out of bounds
         if 0 <= position[0] < x_length and 0 <= position[1] < y_length:
+            adjacent.append(position)
+    return adjacent 
+
+# Returns a list of unvisited neighbors
+def get_unvisited(cell, maze, x_length, y_length):
+    adjacent = get_adjacent(cell, x_length, y_length)
+    unvisited = []
+    for position in adjacent:
             c =  maze[position[1]][position[0]]
             # Only accept cells that are not visited
             if c.visited == False:
