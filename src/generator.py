@@ -7,12 +7,11 @@ def make_empty_maze(size):
     return [[Cell(x, y) for x in range(size[0])] for y in range(size[1])]
 
 # Uses a converted maze render to generate an svg
-def render_svg(maze, map):
+def render_svg(maze, map, filename):
     scale = 10
     width = len(maze[0]) * scale
     height = len(maze) * scale
     
-    filename = 'maze.svg'
     with open(filename, 'w') as f:
         print('<?xml version="1.0" encoding="utf-8"?>', file=f)
         print(f'<svg width="{width}" height="{height}"', file=f)
