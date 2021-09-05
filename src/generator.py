@@ -55,6 +55,13 @@ def convert_maze_for_render(maze, x_length, y_length):
                 render[2 * c.x + 1][2 * (c.y + 1)] = 'O'
     return render
 
+# Returns a maze with a solution path
+def draw_path(maze, path):
+    for point in path:
+        maze[point[1]][point[0]] = 'P'
+
+    return maze
+
 # Returns a list of neighboring cells
 # Must be either a cell object or a tuple
 def get_neighbor(cell=None, position=None):
