@@ -31,3 +31,26 @@ def get_new_position(current_pos: tuple, dx: int, dy: int):
     '''
 
     return (current_pos[0] + dx, current_pos[1] + dy)
+
+
+def get_move(event):
+    '''
+    Returns a change in position if the event is a
+    valid key to move. Returns none if it is not
+
+    event -- pygame event
+    '''
+    if event.key == pygame.K_UP:
+        dx, dy = 0, -1
+    elif event.key == pygame.K_DOWN:
+        dx, dy = 0, 1
+    elif event.key == pygame.K_LEFT:
+        dx, dy = -1, 0
+    elif event.key == pygame.K_RIGHT:
+        dx, dy = 1, 0
+    else:
+        dx, dy = None, None
+
+    return dx, dy
+
+
