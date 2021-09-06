@@ -54,3 +54,16 @@ def get_move(event):
     return dx, dy
 
 
+def add_player_to_maze(maze:list, p: Player):
+    '''
+    Returns a new deepcopy of a maze that has the 
+    player added to a cell
+
+    maze -- array of cells
+    p -- player object
+    '''
+    player_maze = deepcopy(maze)
+    player_maze[p.x][p.y] = 'C'
+    return player_maze
+
+    
