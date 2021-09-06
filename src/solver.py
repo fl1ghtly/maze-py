@@ -42,9 +42,7 @@ def main(file):
     path = breadth_first_search(np_maze, start)
     maze_solution = generator.draw_path(maze_arr, path)
 
-    svg_map = {'W': 'black', 'O': 'white', 'F': 'red',
-               'S': 'green', 'P': 'orange'}
-    generator.render_svg(maze_solution, svg_map, 'solution.svg')
+    generator.render_svg(maze_solution, 'solution.svg')
 
 
 if __name__ == '__main__':

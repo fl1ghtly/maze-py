@@ -7,12 +7,14 @@ def make_empty_maze(size):
     # Returns a x by y array populated with cells
     return [[Cell(x, y) for x in range(size[0])] for y in range(size[1])]
 
-
-def render_svg(maze, map, filename):
+# TODO add ability to write SVG but return a buffer
+def render_svg(maze, filename):
     # Uses a converted maze render to generate an svg
     scale = 10
     width = len(maze[0]) * scale
     height = len(maze) * scale
+    map = {'W': 'black', 'O': 'white', 'F': 'red',
+           'S': 'green', 'P': 'orange', 'C': 'yellow'}
 
     with open(filename, 'w') as f:
         print('<?xml version="1.0" encoding="utf-8"?>', file=f)
@@ -145,9 +147,8 @@ def main():
 
     # Renders the final maze
     render = convert_maze_for_render(maze, x_length, y_length)
-    svg_map = {'W': 'black', 'O': 'white', 'F': 'red',
-               'S': 'green', 'P': 'orange'}
-    render_svg(render, svg_map, 'maze.svg')
+    
+    render_svg(render, 'maze.svg')
 
 
 if __name__ == "__main__":
