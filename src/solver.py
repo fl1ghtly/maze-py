@@ -5,7 +5,9 @@ import numpy as np
 
 
 def find_start(maze):
-    # Finds where the maze begins
+    '''
+    Finds where the maze begins when given a cell array
+    '''
     for (x, y), cell in np.ndenumerate(maze):
         if cell == 'S':
             return x, y
