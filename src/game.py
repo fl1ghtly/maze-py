@@ -67,3 +67,18 @@ def add_player_to_maze(maze:list, p: Player):
     return player_maze
 
     
+def update_display(screen, maze: list, player: Player):
+    '''
+    Updates the game's display
+
+    screen -- pygame screen
+    maze -- array of cells
+    player -- player object
+    '''
+    filename = 'temp.svg'
+    new_maze = add_player_to_maze(maze, player)
+    render_svg(new_maze, filename)
+    buff = converter.convert_svg(filename)
+    im = pygame.image.load(buff)
+    screen.blit(im, (0, 0))
+    pygame.display.update()
