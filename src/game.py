@@ -12,3 +12,14 @@ def check_possible_move(maze: list, position: tuple):
     else:
         return True
 
+
+def get_new_position(current_pos: tuple, dx: int, dy: int):
+    '''
+    Returns the new position given a change in x and y
+
+    current_pos -- position of the player
+    dx -- change in x position
+    dy -- change in y position
+    '''
+
+    return (current_pos[0] + dx, current_pos[1] + dy)
