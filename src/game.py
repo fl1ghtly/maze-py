@@ -1,3 +1,11 @@
+from player import Player
+from solver import find_start
+from generator import render_svg
+from copy import deepcopy
+import converter
+import pygame
+
+
 def check_possible_move(maze: list, position: tuple):
     '''
     Using the position to move to, it checks if the move 
