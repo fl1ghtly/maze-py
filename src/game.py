@@ -82,3 +82,36 @@ def update_display(screen, maze: list, player: Player):
     im = pygame.image.load(buff)
     screen.blit(im, (0, 0))
     pygame.display.update()
+
+
+def main(maze_file):
+    '''
+    Runs the maze game
+    '''
+    maze_arr = converter.svg_to_array(maze_file)
+    size = len(maze_arr[0]) * 10 , len(maze_arr) * 10
+    start_x, start_y = find_start(maze_arr)
+    player = Player(start_x, start_y)
+
+    pygame.init()
+    screen = pygame.display.set_mode(size)
+
+    update_display(screen, maze_arr, player)
+    running = True
+    while running:
+        for e in pygame.event.get():
+            dx, dy = None, None
+            if e.type == pygame.QUIT:
+                running = False
+            elif e.type == pygame.KEYDOWN:
+                dx, dy = get_move(e)
+                
+            if dx is not None and dy is not None:
+                new_pos = get_new_position(player.position, dx, dy)
+                if check_possible_move(maze_arr, new_pos):
+                    player.update_position(dx, dy)
+                    update_display(screen, maze_arr, player)
+
+
+if __name__ == '__main__':
+    main('maze.svg')
