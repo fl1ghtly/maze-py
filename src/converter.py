@@ -8,8 +8,7 @@ def convert_svg(file):
     # Converts a SVG file to a png file
     # Returns a python file object
     draw = svg2rlg(file)
-    buff = BytesIO()
-    renderPM.drawToFile(draw, buff, fmt='png')
+    buff = BytesIO(draw.asString('png'))
     return buff
 
 
